@@ -1,112 +1,133 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Solicitud Médica</title>
+  <meta charset="UTF-8">
+  <title>Mi Historial Médico</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    :root {
-      --bg: #e8fdf5;
-      --primary: #2c977d;
-      --secondary: #a1e6d3;
-      --text: #1e3f3a;
-      --hover: #237a65;
-    }
-
     body {
-      font-family: sans-serif;
-      background: var(--bg);
-      margin: 0; padding: 2rem;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f6fc;
+      padding: 2rem;
+      color: #333;
     }
 
-    .box {
+    .container {
       max-width: 600px;
-      margin: auto;
-      background: #fff;
-      padding: 2rem;
+      margin: 0 auto;
+      background: white;
       border-radius: 12px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-      border: 1px solid var(--secondary);
+      padding: 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
       text-align: center;
-      color: var(--primary);
-      margin-bottom: 1rem;
+      color: #0066cc;
     }
 
     label {
       display: block;
+      margin-bottom: 8px;
       font-weight: 600;
-      margin: 1rem 0 .3rem;
-      color: var(--text);
     }
 
-    input, select, textarea {
+    input {
       width: 100%;
-      padding: .65rem;
-      border: 1px solid var(--secondary);
+      padding: 10px;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
       border-radius: 6px;
-      background: #f8fefc;
-      font-size: 1rem;
     }
 
     button {
-      margin-top: 1.5rem;
       width: 100%;
-      background: var(--primary);
+      background: #0066cc;
       color: white;
+      padding: 12px;
       border: none;
-      padding: 1rem;
-      font-size: 1rem;
-      border-radius: 8px;
+      border-radius: 6px;
+      font-size: 16px;
       cursor: pointer;
-      transition: background 0.3s;
     }
 
     button:hover {
-      background: var(--hover);
+      background: #004a99;
+    }
+
+    .registro {
+      background: #eaf0fb;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .registro h3 {
+      margin: 0 0 0.5rem 0;
+      color: #003d66;
+    }
+
+    .error {
+      color: red;
+      margin-top: 1rem;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h1>Solicitud Médica</h1>
-    <form id="form">
-      <label>Paciente *</label>
-      <input type="text" id="paciente" required />
-      
-      <label>Fecha de consulta *</label>
-      <input type="date" id="consulta" required />
-      
-      <label>Médico *</label>
-      <input type="text" id="medico" required />
-      
-      <label>Cédula *</label>
-      <input type="text" id="cedula" required />
-      
-      <label>Diagnóstico *</label>
-      <textarea id="dx" required></textarea>
-      
-      <label>Procedimiento *</label>
-      <input type="text" id="proc" required />
-      
-      <label>Justificación *</label>
-      <textarea id="just" required></textarea>
-
-      <label>Fecha preferida de cita</label>
-      <input type="date" id="fechaCita" />
-      
-      <label>Horario</label>
-      <select id="hora">
-        <option value="matutino">8–12</option>
-        <option value="vespertino">12–16</option>
-        <option value="nocturno">16–20</option>
-      </select>
-
-      <button type="submit">Enviar Solicitud</button>
+  <div class="container">
+    <h1>Consultar Historial Médico</h1>
+    <form id="formularioHistorial">
+      <label for="pacienteId">Ingrese su ID de Paciente</label>
+      <input type="text" id="pacienteId" placeholder="Ej: demo" required>
+      <button type="submit">Consultar</button>
     </form>
+
+    <div id="resultadosHistorial"></div>
   </div>
-<script src="app.js"></script>
+
+  <script>
+    document.getElementById('formularioHistorial').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const pacienteId = document.getElementById('pacienteId').value.trim().toLowerCase();
+      const resultados = document.getElementById('resultadosHistorial');
+      resultados.innerHTML = '';
+
+      if (pacienteId === 'demo') {
+        const historialSimulado = [
+          {
+            fecha: "2024-11-15",
+            diagnostico: "Hipertensión arterial",
+            tratamiento: "Losartán 50mg una vez al día"
+          },
+          {
+            fecha: "2025-01-22",
+            diagnostico: "Diabetes tipo 2",
+            tratamiento: "Metformina 850mg cada 12 horas"
+          },
+          {
+            fecha: "2025-03-10",
+            diagnostico: "Infección urinaria",
+            tratamiento: "Nitrofurantoína 100mg cada 6 horas por 7 días"
+          }
+        ];
+
+        historialSimulado.forEach(entry => {
+          const div = document.createElement('div');
+          div.className = 'registro';
+          div.innerHTML = `
+            <h3>Consulta del ${entry.fecha}</h3>
+            <p><strong>Diagnóstico:</strong> ${entry.diagnostico}</p>
+            <p><strong>Tratamiento:</strong> ${entry.tratamiento}</p>
+          `;
+          resultados.appendChild(div);
+        });
+      } else {
+        resultados.innerHTML = `<p class="error">ID no encontrado. Por favor, use "demo" para probar.</p>`;
+      }
+    });
+  </script>
 </body>
 </html>
